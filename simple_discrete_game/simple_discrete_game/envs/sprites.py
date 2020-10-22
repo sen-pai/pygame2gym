@@ -1,6 +1,6 @@
 import pygame as pg
 import math
-from settings import *
+from .settings import *
 
 
 class Player(pg.sprite.Sprite):
@@ -8,7 +8,7 @@ class Player(pg.sprite.Sprite):
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image = pg.Surface((TILESIZE, TILESIZE), pg.SRCALPHA, 32)
         self.image.fill(YELLOW)
         self.rect = self.image.get_rect()
         self.x = x
@@ -35,7 +35,7 @@ class Wall(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image = pg.Surface((TILESIZE, TILESIZE), pg.SRCALPHA, 32)
         self.image.fill(GREEN)
         self.rect = self.image.get_rect()
         self.x = x
@@ -49,7 +49,7 @@ class Goal(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.goals
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image = pg.Surface((TILESIZE, TILESIZE), pg.SRCALPHA, 32)
         self.image.fill(WHITE)
         self.rect = self.image.get_rect()
         self.x = x

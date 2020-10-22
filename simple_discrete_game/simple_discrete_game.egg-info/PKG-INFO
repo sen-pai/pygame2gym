@@ -1,0 +1,10 @@
+Metadata-Version: 1.2
+Name: simple-discrete-game
+Version: 0.0.1
+Summary: Simple Pygame to OpenAI Gym environment
+Home-page: https://github.com/sen-pai/pygame2gym
+Author: Sharan Pai
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: >=3.6

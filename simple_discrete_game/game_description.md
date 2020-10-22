@@ -1,3 +1,8 @@
-A gridworld style game where the agent (red circle) needs to navigate to the green box (goal)
+A GridWorld style game where the agent (Yellow Box) needs to navigate to the goal (White Box)
 
 The available actions are up, down, left, right.
+
+To run: pip install -e .
+
+You can play the game with keyboard inputs by running
+python playable_game.py
