@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 from array2gif import write_gif
 
 
-def random_agent(episodes=40):
+def random_agent(episodes=80):
     env = gym.make("GoalGrid-v0")
     all_states = []
-    for i in range(5):
+    for i in range(1):
         env.reset()
         # env.render()
         for e in range(episodes):

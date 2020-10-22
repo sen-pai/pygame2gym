@@ -6,3 +6,7 @@ To run: pip install -e .
 
 You can play the game with keyboard inputs by running
 python playable_game.py
+
+<p align="center">
+<img src="random_agent.gif">
+</p>

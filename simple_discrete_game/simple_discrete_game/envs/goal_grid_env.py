@@ -97,7 +97,7 @@ class GoalGridEnv(gym.Env):
         return dist
 
     def _check_done(self):
-        if self._reward_func() == self.max_reward:
+        if self._reward_func() == 1:
             return True
         return False
 
