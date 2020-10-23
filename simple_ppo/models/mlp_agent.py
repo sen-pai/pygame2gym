@@ -6,6 +6,8 @@ import numpy as np
 
 
 class Mish(nn.Module):
+    # this activation is apparenly much better than ReLU or ElU.
+    # check out https://github.com/digantamisra98/Mish for more details
     def __init__(self):
         super().__init__()
 
@@ -68,54 +70,3 @@ class mlp_value_net(nn.Module):
 
     def forward(self, obs):
         return self.main(obs)
-
-
-class discriminator_mlp_net(nn.Module):
-    def __init__(self, state_size, actions_size, hidden_size):
-        super(discriminator_mlp_net, self).__init__()
-
-        self.main = nn.Sequential(
-            nn.Linear(state_size + actions_size, hidden_size * 2),
-            Mish(),
-            nn.Linear(hidden_size * 2, hidden_size),
-            Mish(),
-            nn.Linear(hidden_size, 1),
-            nn.Sigmoid(),
-        )
-
-    def forward(self, obs, action):
-        s_a = torch.cat((obs, action), 1)
-        return self.main(s_a)
-
-
-# define discrete policy network
-class not_mlp_policy_net(nn.Module):
-    def __init__(self, state_size, other_policy_representation, hidden_size, n_actions):
-        super(not_mlp_policy_net, self).__init__()
-        self.main = nn.Sequential(
-            nn.Linear(state_size + other_policy_representation, hidden_size * 2),
-            Mish(),
-            nn.Linear(hidden_size * 2, hidden_size),
-            Mish(),
-            nn.Linear(hidden_size, n_actions),
-            nn.Softmax(dim=-1),
-        )
-
-    def forward(self, obs):
-        return self.main(obs)
-
-    def act(self, obs):
-        probs = self.main(obs)
-        dist = Categorical(probs)
-        action = dist.sample()
-
-        log_prob = dist.log_prob(action)
-
-        return action, log_prob
-
-    def evaluate(self, obs, action):
-        probs = self.main(obs)
-        dist = Categorical(probs)
-        log_prob = dist.log_prob(action)
-        entropy = dist.entropy()
-        return entropy, log_prob

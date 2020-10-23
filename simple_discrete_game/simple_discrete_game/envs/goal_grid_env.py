@@ -51,8 +51,13 @@ class GoalGridEnv(gym.Env):
         possible_x = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         possible_y = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
-        map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 2
-        map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 3
+        # map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 2
+        # map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 3
+
+        # fixed player and Goal
+
+        map[10][2] = 2
+        map[3][4] = 3
         return map
 
     def reset(self):
@@ -70,9 +75,10 @@ class GoalGridEnv(gym.Env):
             if tile == 3:
                 self.goal = Goal(self, col, row)
 
-    # def update(self):
-    #     # update portion of the game loop
-    #     self.all_sprites.update()
+        self.all_sprites.update()
+        self.draw()
+
+        return self._get_obs()
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
@@ -90,14 +96,15 @@ class GoalGridEnv(gym.Env):
         return pg.surfarray.array3d(self.screen).swapaxes(0, 1)
 
     def _reward_func(self):
+        self.goal_visited_reward = 100
         # rewaard is the distance between goal and player
         dist = -(round(math.hypot(self.goal.x - self.player.x, self.goal.y - self.player.y), 2))
         if dist == 0:
-            return 1
+            return self.goal_visited_reward
         return dist
 
     def _check_done(self):
-        if self._reward_func() == 1:
+        if self._reward_func() == self.goal_visited_reward:
             return True
         return False
 
@@ -112,7 +119,6 @@ class GoalGridEnv(gym.Env):
         if action == 3:
             self.player.move(dy=1)
 
-        # self.update()
         self.all_sprites.update()
         self.draw()
 
