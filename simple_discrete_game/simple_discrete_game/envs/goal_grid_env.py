@@ -26,8 +26,8 @@ class GoalGridEnv(gym.Env):
         pg.display.set_mode((1, 1))
         self.screen = pg.Surface((WIDTH, HEIGHT), pg.SRCALPHA, 32)
         self.clock = pg.time.Clock()
-        # self.max_reward = 20
 
+        # self.config = config
         self.action_space = spaces.Discrete(4)
         self.observation_space = spaces.Box(low=0.0, high=256.0, shape=(128, 128, 3))
         self.reset()
@@ -48,16 +48,18 @@ class GoalGridEnv(gym.Env):
                 map[row][col] = 1
 
         # add player and goal in a random cell
-        possible_x = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-        possible_y = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        possible_x = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+        possible_y = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 
-        # map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 2
-        # map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 3
+        # if self.config["agent_spawn"] == "random":
+
+        map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 2
+        map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 3
 
         # fixed player and Goal
 
-        map[10][2] = 2
-        map[3][4] = 3
+        # map[10][2] = 2
+        # map[3][4] = 3
         return map
 
     def reset(self):
@@ -96,9 +98,11 @@ class GoalGridEnv(gym.Env):
         return pg.surfarray.array3d(self.screen).swapaxes(0, 1)
 
     def _reward_func(self):
-        self.goal_visited_reward = 100
+        self.goal_visited_reward = 1
         # rewaard is the distance between goal and player
         dist = -(round(math.hypot(self.goal.x - self.player.x, self.goal.y - self.player.y), 2))
+        # sparce reward
+        dist = 0
         if dist == 0:
             return self.goal_visited_reward
         return dist

@@ -31,9 +31,9 @@ def flat_tensor(t):
 
 
 def preprocess_obs(obs):
-    #convert to grayscale by averaging channels
-    obs = np.mean(obs, axis=2)/255.0
-    #convert to tensor
+    # convert to grayscale by averaging channels
+    obs = np.mean(obs, axis=2) / 255.0
+    # convert to tensor
     return torch.from_numpy(obs).float().view(-1)
 
 
@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
     # creating environment
     env = gym.make(args.env_name)
-    state_size = 128*128
+    state_size = 128 * 128
     n_actions = env.action_space.n
 
     # create nn's
@@ -183,7 +183,7 @@ if __name__ == "__main__":
         tb_summary.add_scalar("time/eval_traj_len", mean(eval_timesteps), global_step=iter)
         print("eval_reward ", mean(eval_rewards), " eval_timesteps ", mean(eval_timesteps))
 
-        if iter % 50 == 0:
+        if iter % 10 == 0:
             torch.save(
                 main_actor.state_dict(), "ppo_" + args.env_name + "_actor" + str(iter) + ".pth"
             )
