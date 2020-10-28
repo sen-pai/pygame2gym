@@ -16,8 +16,8 @@ from algo.ppo_step import calc_ppo_loss_gae
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--env-name", default="GoalGrid-v0")
-parser.add_argument("--batch-size", type=int, default=4000, help="batch_size")
-parser.add_argument("--full-ppo-iters", type=int, default=100, help="num times whole thing is run")
+parser.add_argument("--batch-size", type=int, default=5000, help="batch_size")
+parser.add_argument("--full-ppo-iters", type=int, default=1000, help="num times whole thing is run")
 args = parser.parse_args()
 
 
@@ -38,8 +38,8 @@ def preprocess_obs(obs):
 
 
 #### Hyper parameters
-num_value_updates = 5
-num_policy_updates = 5
+num_value_updates = 6
+num_policy_updates = 6
 num_evaluate = 20
 
 
@@ -78,7 +78,7 @@ def collect_exp_single_actor(env, actor, memory, iters):
 
         obs = next_obs
 
-        if done or current_timestep > 50:
+        if done or current_timestep > 200:
             obs = env.reset()
             current_timestep = 0
 
@@ -93,8 +93,8 @@ if __name__ == "__main__":
     n_actions = env.action_space.n
 
     # create nn's
-    main_actor = mlp_policy_net(state_size, 32, n_actions)
-    critic = mlp_value_net(state_size, hidden_size=32)
+    main_actor = mlp_policy_net(state_size, 64, n_actions)
+    critic = mlp_value_net(state_size, hidden_size=64)
 
     optim_actor = torch.optim.Adam(main_actor.parameters(), lr=3e-4, betas=(0.9, 0.999))
     optim_critic = torch.optim.Adam(critic.parameters(), lr=1e-3, betas=(0.9, 0.999))
@@ -169,9 +169,9 @@ if __name__ == "__main__":
             obs, reward, done, info = env.step(action.item())
             ep_reward += reward
 
-            if done or ep_timestep > 50:
-                if done:
-                    print("entered done")
+            if done or ep_timestep > 200:
+                # if done:
+                #     print("entered done")
                 obs = env.reset()
                 eval_ep += 1
                 eval_timesteps.append(ep_timestep)
@@ -183,7 +183,7 @@ if __name__ == "__main__":
         tb_summary.add_scalar("time/eval_traj_len", mean(eval_timesteps), global_step=iter)
         print("eval_reward ", mean(eval_rewards), " eval_timesteps ", mean(eval_timesteps))
 
-        if iter % 10 == 0:
+        if iter % 100 == 0:
             torch.save(
                 main_actor.state_dict(), "ppo_" + args.env_name + "_actor" + str(iter) + ".pth"
             )
