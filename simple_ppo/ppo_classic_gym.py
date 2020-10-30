@@ -147,6 +147,7 @@ if __name__ == "__main__":
 
         ep_reward = 0
         ep_timestep = 0
+        num_done = 0
         while num_evaluate > eval_ep:
             ep_timestep += 1
             obs = flat_tensor(obs)
