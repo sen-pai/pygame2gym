@@ -30,7 +30,9 @@ class GoalGridEnv(gym.Env):
         # self.config = config
         self.action_space = spaces.Discrete(4)
         self.observation_space = spaces.Box(low=0.0, high=256.0, shape=(128, 128, 3))
-        self.sparce_reward = True
+        self.sparce_reward = False
+        # use to maximize reward and not maximize distance
+        self.max_distance = 20
         self.reset()
 
     def generate_new_map(self):
@@ -59,8 +61,8 @@ class GoalGridEnv(gym.Env):
 
         # fixed player and Goal
 
-        # map[10][2] = 2
-        # map[3][4] = 3
+        # map[1][1] = 2
+        # map[14][14] = 3
         return map
 
     def reset(self):
@@ -99,9 +101,13 @@ class GoalGridEnv(gym.Env):
         return pg.surfarray.array3d(self.screen).swapaxes(0, 1)
 
     def _reward_func(self):
-        self.goal_visited_reward = 1
+        self.goal_visited_reward = self.max_distance
         # reward is the distance between goal and player
-        dist = -(round(math.hypot(self.goal.x - self.player.x, self.goal.y - self.player.y), 2))
+        dist = round(
+            self.max_distance
+            - math.hypot(self.goal.x - self.player.x, self.goal.y - self.player.y),
+            2,
+        )
         if dist == 0:
             return self.goal_visited_reward
         if self.sparce_reward:

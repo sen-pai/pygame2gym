@@ -7,6 +7,8 @@ from torch.utils import tensorboard
 import argparse
 import numpy as np
 from statistics import mean
+from tqdm import tqdm
+
 import gym
 import simple_discrete_game
 
@@ -40,7 +42,7 @@ def preprocess_obs(obs):
 #### Hyper parameters
 num_value_updates = 6
 num_policy_updates = 6
-num_evaluate = 20
+num_evaluate = 50
 
 
 def calculate_gae(memory, gamma=0.99, lmbda=0.95):
@@ -105,7 +107,7 @@ if __name__ == "__main__":
     # logging
     tb_summary = tensorboard.SummaryWriter()
 
-    for iter in range(args.full_ppo_iters + 1):
+    for iter in tqdm(range(args.full_ppo_iters + 1)):
 
         main_memory = collect_exp_single_actor(env, main_actor, main_memory, args.batch_size)
         critic.to(cuda)
@@ -170,8 +172,8 @@ if __name__ == "__main__":
             ep_reward += reward
 
             if done or ep_timestep > 200:
-                # if done:
-                #     print("entered done")
+                if done:
+                    num_done += 1
                 obs = env.reset()
                 eval_ep += 1
                 eval_timesteps.append(ep_timestep)
@@ -181,7 +183,15 @@ if __name__ == "__main__":
 
         tb_summary.add_scalar("reward/eval_reward", mean(eval_rewards), global_step=iter)
         tb_summary.add_scalar("time/eval_traj_len", mean(eval_timesteps), global_step=iter)
-        print("eval_reward ", mean(eval_rewards), " eval_timesteps ", mean(eval_timesteps))
+        tb_summary.add_scalar("reward/prob_done", num_done / num_evaluate, global_step=iter)
+        print(
+            "eval_reward ",
+            mean(eval_rewards),
+            " eval_timesteps ",
+            mean(eval_timesteps),
+            "prob_done",
+            num_done / num_evaluate,
+        )
 
         if iter % 100 == 0:
             torch.save(
