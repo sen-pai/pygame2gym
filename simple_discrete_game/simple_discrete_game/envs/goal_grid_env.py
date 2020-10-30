@@ -30,7 +30,7 @@ class GoalGridEnv(gym.Env):
         # self.config = config
         self.action_space = spaces.Discrete(4)
         self.observation_space = spaces.Box(low=0.0, high=256.0, shape=(128, 128, 3))
-        self.sparce_reward = False
+        self.sparce_reward = True
         # use to maximize reward and not maximize distance
         self.max_distance = 20
         self.reset()
