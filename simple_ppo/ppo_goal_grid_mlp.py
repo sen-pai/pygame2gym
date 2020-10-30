@@ -45,7 +45,7 @@ num_policy_updates = 6
 num_evaluate = 50
 
 
-def calculate_gae(memory, gamma=0.99, lmbda=0.95):
+def calculate_gae(memory, gamma=0.9, lmbda=0.9):
     gae = 0
     for i in reversed(range(len(memory.rewards))):
         delta = (
@@ -57,7 +57,8 @@ def calculate_gae(memory, gamma=0.99, lmbda=0.95):
         memory.returns.insert(0, gae + memory.values[i])
 
     adv = np.array(memory.returns) - memory.values[:-1]
-    memory.advantages = (adv - np.mean(adv)) / (np.std(adv) + 1e-10)
+    memory.advantages = adv
+    # memory.advantages = (adv - np.mean(adv)) / (np.std(adv) + 1e-10)
 
 
 def collect_exp_single_actor(env, actor, memory, iters):
