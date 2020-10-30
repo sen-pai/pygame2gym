@@ -56,13 +56,13 @@ class GoalGridEnv(gym.Env):
 
         # if self.config["agent_spawn"] == "random":
 
-        # map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 2
-        # map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 3
+        map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 2
+        map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 3
 
         # fixed player and Goal
 
-        map[1][1] = 2
-        map[14][14] = 3
+        # map[1][1] = 2
+        # map[14][14] = 3
         return map
 
     def reset(self):
