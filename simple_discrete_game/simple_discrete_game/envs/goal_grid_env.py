@@ -51,10 +51,11 @@ class GoalGridEnv(gym.Env):
                 map[row][col] = 1
 
         # add player and goal in a random cell
-        possible_x = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-        possible_y = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-
-        # if self.config["agent_spawn"] == "random":
+        # possible_x = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+        # possible_y = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+        #
+        possible_x = [2, 3, 4, 5]
+        possible_y = [2, 3, 4, 5]
 
         map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 2
         map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 3
