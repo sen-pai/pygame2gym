@@ -33,6 +33,8 @@ class GoalGridEnv(gym.Env):
         self.sparce_reward = False
         # use to maximize reward and not maximize distance
         self.max_distance = 1
+        self.fixed_player = False
+        self.fixed_goal = True
         self.reset()
 
     def generate_new_map(self):
@@ -51,19 +53,20 @@ class GoalGridEnv(gym.Env):
                 map[row][col] = 1
 
         # add player and goal in a random cell
-        # possible_x = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-        # possible_y = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-        #
-        possible_x = [2, 3, 4, 5]
-        possible_y = [2, 3, 4, 5]
+        possible_x = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+        possible_y = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 
-        map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 2
-        map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 3
+        if self.fixed_goal:
+            # goal is fixed at 14, 14
+            map[14][14] = 3
+        else:
+            map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 3
 
-        # fixed player and Goal
-
-        # map[1][1] = 2
-        # map[14][14] = 3
+        if self.fixed_player:
+            # player is fixed at 2, 2
+            map[2][2] = 2
+        else:
+            map[random.sample(possible_x, 1)[0]][random.sample(possible_y, 1)[0]] = 2
         return map
 
     def reset(self):
@@ -102,7 +105,7 @@ class GoalGridEnv(gym.Env):
         return pg.surfarray.array3d(self.screen).swapaxes(0, 1)
 
     def _reward_func(self):
-        self.goal_visited_reward = self.max_distance
+        self.goal_visited_reward = 1
         # reward is the distance between goal and player
         dist = round(-math.hypot(self.goal.x - self.player.x, self.goal.y - self.player.y), 2,)
 
