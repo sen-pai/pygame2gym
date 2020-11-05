@@ -27,7 +27,7 @@ parser.add_argument("--num-value-updates", type=int, default=4, help="update cri
 parser.add_argument("--num-policy-updates", type=int, default=4, help="update agent per epoch")
 parser.add_argument("--num-evaluate", type=int, default=20, help="eval per epoch")
 parser.add_argument(
-    "--episode-max-lenght", type=int, default=1000, help="max lenght to run an episode"
+    "--episode-max-lenght", type=int, default=100, help="max lenght to run an episode"
 )
 parser.add_argument("--save-interval", type=int, default=100, help="save weights every x episodes")
 parser.add_argument("--agent-lr", type=int, default=0.002, help="agent learning rate")
@@ -205,7 +205,7 @@ if __name__ == "__main__":
         json_log["avg episode timesteps"].append(mean(eval_timesteps))
         json_log["prob done"].append(num_done / args.num_evaluate)
 
-        print("eval_reward ", mean(eval_rewards), " eval_timesteps ", mean(eval_timesteps))
+        print("eval_reward ", mean(eval_rewards), " eval_timesteps ", mean(eval_timesteps), "prob_done", num_done / args.num_evaluate)
 
         if iter % args.save_interval == 0 and iter > 0:
             torch.save(
