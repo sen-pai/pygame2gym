@@ -189,13 +189,14 @@ if __name__ == "__main__":
             ep_reward += reward
 
             if done or ep_timestep >= args.episode_max_lenght:
+                if done:
+                    num_done += 1
                 obs = env.reset()
                 eval_ep += 1
                 eval_timesteps.append(ep_timestep)
                 eval_rewards.append(ep_reward)
                 ep_reward = 0
                 ep_timestep = 0
-                num_done += 1
 
         tb_summary.add_scalar("reward/eval_reward", mean(eval_rewards), global_step=iter)
         tb_summary.add_scalar("time/eval_traj_len", mean(eval_timesteps), global_step=iter)
